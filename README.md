@@ -60,7 +60,15 @@ following modules:
 * bottle-beaker
 
 The sessions managed by `beaker` will contain the shopping cart information so that different 
-sessions will have their own shopping cart. The Python data structure of the shopping cart will be 
+sessions will have their own shopping cart. You will need to implementing this by storing the 
+shopping cart in the beaker session dictionary under the key `cart`. For details on how to use 
+beaker, watch the video and associated documentation in iLearn:
+
+* [YouTube: Managing sessions with Beaker and Bottle URL](https://ilearn.mq.edu.au/mod/url/view.php?id=5340405)
+* [Download the starter code from the video](https://ilearn.mq.edu.au/pluginfile.php/5953248/mod_url/intro/code-starter.zip)
+* [Beaker documentation](https://beaker.readthedocs.io/en/latest/)
+
+The Python data structure of the shopping cart will be 
 a list of dictionaries, each one representing one item in the shopping cart. Eg.
 
 ```python

@@ -34,7 +34,7 @@ class SessionTests(unittest.TestCase):
         request.environ['beaker.session'] = {'cart': cart}
         self.assertEqual(cart, session.get_cart_contents())
 
-    def test_cart(self):
+    def test_add_to_cart(self):
         """We can add items to the shopping cart
         and retrieve them"""
 
@@ -51,22 +51,12 @@ class SessionTests(unittest.TestCase):
         cart = session.get_cart_contents()
         self.assertEqual(2, len(cart))
 
-        # check that all required fields are in the every cart entry
+        # check that all required fields are in every cart entry
         for entry in cart:
             self.assertIn('id', entry)
             self.assertIn('name', entry)
             self.assertIn('quantity', entry)
             self.assertIn('cost', entry)
-
-        # check that we cannot add a non-existing object
-        session.add_to_cart(self.db, 100, 2)
-        cart = session.get_cart_contents()
-        self.assertEqual(2, len(cart), "Error when adding non-existing object")
-
-        # check that we cannot add an item that exceeds amount in inventory
-        session.add_to_cart(self.db, 10, 100)
-        cart = session.get_cart_contents()
-        self.assertEqual(2, len(cart), "Quantity exceeded amount in inventory")
 
         # We start a session again and check that the cart is empty
         cart = []
@@ -81,6 +71,57 @@ class SessionTests(unittest.TestCase):
         cart = session.get_cart_contents()
         self.assertEqual(3, len(cart))
 
+
+    def test_add_nonexisting_to_cart(self):
+        # We start one session
+        cart = []
+        request.environ['beaker.session'] = MockBeakerSession({'cart': cart})
+        self.assertEqual([], session.get_cart_contents())
+        product =  self.products['Classic Varsity Top']
+        session.add_to_cart(self.db, product['id'], 1 )
+        cart = session.get_cart_contents()
+        self.assertEqual(1, len(cart))
+
+        # check that we cannot add a non-existing object
+        session.add_to_cart(self.db, 100, 2)
+        cart = session.get_cart_contents()
+        self.assertEqual(1, len(cart), "Error when adding non-existing object")
+
+        # check that we cannot add an item that exceeds amount in inventory
+        session.add_to_cart(self.db, 10, 100)
+        cart = session.get_cart_contents()
+        self.assertEqual(1, len(cart), "Quantity exceeded amount in inventory")
+
+        # check that we cannot add an item with non-positive amount
+        session.add_to_cart(self.db, 10, -3)
+        cart = session.get_cart_contents()
+        self.assertEqual(1, len(cart), "Adding item with negative amount")
+        session.add_to_cart(self.db, 10, 0)
+        cart = session.get_cart_contents()
+        self.assertEqual(1, len(cart), "Adding item with zero amount")
+
+    def test_add_wrong_amount_to_cart(self):
+        # We start one session
+        cart = []
+        request.environ['beaker.session'] = MockBeakerSession({'cart': cart})
+        self.assertEqual([], session.get_cart_contents())
+        product =  self.products['Classic Varsity Top']
+        session.add_to_cart(self.db, product['id'], 1 )
+        cart = session.get_cart_contents()
+        self.assertEqual(1, len(cart))
+
+        # check that we cannot add an item that exceeds amount in inventory
+        session.add_to_cart(self.db, 10, 100)
+        cart = session.get_cart_contents()
+        self.assertEqual(1, len(cart), "Quantity exceeded amount in inventory")
+
+        # check that we cannot add an item with non-positive amount
+        session.add_to_cart(self.db, 10, -3)
+        cart = session.get_cart_contents()
+        self.assertEqual(1, len(cart), "Adding item with negative amount")
+        session.add_to_cart(self.db, 10, 0)
+        cart = session.get_cart_contents()
+        self.assertEqual(1, len(cart), "Adding item with zero amount")
 
     def test_cart_update(self):
         """We can update the quantity of an item in the cart"""
@@ -118,17 +159,5 @@ class SessionTests(unittest.TestCase):
         self.assertEqual(product['id'], cart[0]['id'], "Test adding excessive quantity of products")
         self.assertEqual(quantity*2, cart[0]['quantity'], "Test adding excessive quantity of products")
 
-        # now add again, this time adding a negative amount, check that
-        # we still have one item and the quantity has not changed
-        session.add_to_cart(self.db, product['id'], -1)
-        cart = session.get_cart_contents()
-
-        self.assertEqual(1, len(cart), "Test adding negative amount")
-        self.assertEqual(product['id'], cart[0]['id'], "Test adding negative amount")
-        self.assertEqual(quantity*2, cart[0]['quantity'], "Test adding negative amount")
-
-
 if __name__=='__main__':
     unittest.main()
-
-
