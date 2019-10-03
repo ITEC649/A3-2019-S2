@@ -193,8 +193,15 @@ run each test file individually in PyCharm (right click on the test file and sel
 `test_views.py` provides functional tests of the app by making requests to the URLs defined
 above and checking the responses. 
 
+Submission
+==========
+
+You should submit a zip file with the same structure as the starter kit. The entry point for the 
+application should be in main.py and the shopping cart access functions should be in session.py.  
+Include all files required by your application including any views (templates).
+
 Grading
-========
+-------
 
 This assignment is worth 20% of the final marks for ITEC649.  The marks will be assigned as follows:
 
@@ -208,4 +215,18 @@ Code quality means well laid out code, good use of variable names, functions and
 Documentation means that all functions that you write have suitable docstrings and where appropriate you 
  use comments in your code to explain yourself. 
  
- 
+Late Submission
+---------------
+
+Unless you have made prior arrangements for late submission due to unforeseeable circumstances, you will be penalised 
+**one mark for every day or part thereof** (1% of the total unit assessment) that you submit late.  This means that,for example,
+if the submission date is 11:55pm on 27th October and you submit on 10:00am on 29th October, you will
+have a penalty of two marks.
+
+Academic Honesty and Plagiarism
+-------------------------------
+
+[University Academic Honesty Policy](https://staff.mq.edu.au/work/strategy-planning-and-governance/university-policies-and-procedures/policies/academic-honesty)
+
+Plagiarism involves using the work of another person and presenting it as one's own. The Department, in line with 
+University policy, treats all cases seriously. 
